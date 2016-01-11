@@ -11,19 +11,19 @@ def connect():
     return psycopg2.connect("dbname=tournament")
 
 
-def deleteMatches():
+def delete_matches():
     """Remove all the match records from the database."""
 
 
-def deletePlayers():
+def delete_players():
     """Remove all the player records from the database."""
 
 
-def countPlayers():
+def count_players():
     """Returns the number of players currently registered."""
 
 
-def registerPlayer(name):
+def register_player(name):
     """Adds a player to the tournament database.
   
     The database assigns a unique serial id number for the player.  (This
@@ -34,7 +34,7 @@ def registerPlayer(name):
     """
 
 
-def playerStandings():
+def player_standings():
     """Returns a list of the players and their win records, sorted by wins.
 
     The first entry in the list should be the player in first place,
@@ -50,7 +50,7 @@ def playerStandings():
     """
 
 
-def reportMatch(winner, loser):
+def report_match(winner, loser):
     """Records the outcome of a single match between two players.
 
     Args:
@@ -59,7 +59,7 @@ def reportMatch(winner, loser):
     """
  
  
-def swissPairings():
+def swiss_pairings():
     """Returns a list of pairs of players for the next round of a match.
   
     Assuming that there are an even number of players registered, each player
