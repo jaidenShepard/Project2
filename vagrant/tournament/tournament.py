@@ -7,30 +7,31 @@ import psycopg2
 
 
 def connect():
-    """Connect to the PostgreSQL database.  Returns a database connection."""
+    """Connect to the PostgreSQL database.  :returns: a database connection."""
     return psycopg2.connect("dbname=tournament")
 
 
 def delete_matches():
     """Remove all the match records from the database."""
+    db_query("DELETE FROM matches;")
 
 
 def delete_players():
     """Remove all the player records from the database."""
+    db_query("DELETE FROM players, player_wins;")
 
 
 def count_players():
-    """Returns the number of players currently registered."""
+    """:returns: the number of players currently registered."""
 
 
 def register_player(name):
     """Adds a player to the tournament database.
-  
+
     The database assigns a unique serial id number for the player.  (This
     should be handled by your SQL database schema, not in your Python code.)
-  
-    Args:
-      name: the player's full name (need not be unique).
+
+    :param name: the player's full name (need not be unique).
     """
 
 
@@ -41,7 +42,7 @@ def player_standings():
     or a player
     tied for first place if there is currently a tie.
 
-    Returns:
+    :returns:
       A list of tuples, each of which contains (id, name, wins, matches):
         id: the player's unique id (assigned by the database)
         name: the player's full name (as registered)
@@ -53,21 +54,20 @@ def player_standings():
 def report_match(winner, loser):
     """Records the outcome of a single match between two players.
 
-    Args:
-      winner:  the id number of the player who won
-      loser:  the id number of the player who lost
+    :param winner:  the id number of the player who won
+    :param loser:  the id number of the player who lost
     """
- 
- 
+
+
 def swiss_pairings():
     """Returns a list of pairs of players for the next round of a match.
-  
+
     Assuming that there are an even number of players registered, each player
     appears exactly once in the pairings.  Each player is paired with another
     player with an equal or nearly-equal win record, that is, a player adjacent
     to him or her in the standings.
-  
-    Returns:
+
+    :returns:
       A list of tuples, each of which contains (id1, name1, id2, name2)
         id1: the first player's unique id
         name1: the first player's name
@@ -76,3 +76,16 @@ def swiss_pairings():
     """
 
 
+def db_query(query):
+    """Function for querying the database
+
+    Connects to db, selects cursor, passes query to db, commits, and closes
+    the connection.
+
+    :param query: A string to be passed as a query to the database
+    """
+    conn = connect()
+    c = conn.cursor()
+    c.execute(query)
+    conn.commit()
+    conn.close()
