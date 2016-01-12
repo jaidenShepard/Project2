@@ -18,7 +18,9 @@ def delete_matches():
 
 def delete_players():
     """Remove all the player records from the database."""
-    db_query("DELETE FROM players, player_wins;")
+    # TODO figure out how to do this in sql. cascades apparently
+    db_query("DELETE FROM players;")
+    # db_query("DELETE FROM player_wins;")
 
 
 def count_players():
