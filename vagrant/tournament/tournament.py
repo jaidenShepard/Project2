@@ -38,6 +38,8 @@ def register_player(name):
 
     :param name: the player's full name (need not be unique).
     """
+    query = "INSERT INTO players (name) VALUES ('{0}')".format(name)
+    db_query(query)
 
 
 def player_standings():
