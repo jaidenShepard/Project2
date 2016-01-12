@@ -24,7 +24,10 @@ def delete_players():
 
 
 def count_players():
+    #TODO look into cleaning this up
     """:returns: the number of players currently registered."""
+    count = data_pull("SELECT count(*) as num FROM players;")
+    return count[0]
 
 
 def register_player(name):
@@ -91,3 +94,13 @@ def db_query(query):
     c.execute(query)
     conn.commit()
     conn.close()
+
+
+def data_pull(query):
+    # TODO see if this can be improved
+    conn = connect()
+    c = conn.cursor()
+    c.execute(query)
+    data = c.fetchone()
+    conn.close()
+    return data
