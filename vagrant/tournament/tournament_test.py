@@ -131,11 +131,11 @@ def test_pairings():
 
 
 if __name__ == '__main__':
-    test_delete_matches()
-    test_delete()
-    test_count()
-    test_register()
-    test_register_count_delete()
+    test_delete_matches()  # passed
+    test_delete()  # passed
+    test_count()  # passed
+    test_register()  # passed
+    test_register_count_delete()  # passed
     test_standings_before_matches()
     test_report_matches()
     test_pairings()

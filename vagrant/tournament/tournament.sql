@@ -10,7 +10,7 @@ CREATE DATABASE tournament;
 
 \c tournament
 
-DROP TABLE IF EXISTS players, /*player_wins,*/ matches;
+DROP TABLE IF EXISTS players, player_stats, matches, round_match_ups;
 
 CREATE TABLE players(
   id SERIAL PRIMARY KEY,
@@ -18,11 +18,20 @@ CREATE TABLE players(
 );
 
 CREATE TABLE matches(
-  number SERIAL PRIMARY KEY
+  id SERIAL PRIMARY KEY
 );
 
-/*CREATE TABLE player_wins(
-*player SERIAL REFERENCES players(id),
- * matches INT REFERENCES matches(number)
-);*/
+CREATE TABLE player_stats(
+  player SERIAL REFERENCES players(id),
+  match_id SERIAL REFERENCES matches(id),
+  wins INT DEFAULT 0,
+  losses INT DEFAULT 0,
+  matches INT DEFAULT 0
+);
+
+CREATE TABLE round_match_ups(
+  match SERIAL REFERENCES matches(id),
+  player1 SERIAL REFERENCES players(id),
+  player2 SERIAL REFERENCES players(id)
+);
 

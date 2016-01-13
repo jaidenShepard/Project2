@@ -2,7 +2,7 @@
 #
 # tournament.py -- implementation of a Swiss-system tournament
 #
-
+# TODO error checks for all database functions
 import psycopg2
 
 
@@ -24,10 +24,10 @@ def delete_players():
 
 
 def count_players():
-    #TODO look into cleaning this up
+    # TODO look into cleaning this up
     """:returns: the number of players currently registered."""
     count = data_pull("SELECT count(*) as num FROM players;")
-    return count[0]
+    return count[0][0]
 
 
 def register_player(name):
@@ -38,7 +38,7 @@ def register_player(name):
 
     :param name: the player's full name (need not be unique).
     """
-    query = "INSERT INTO players (name) VALUES ('{0}')".format(name)
+    query = "INSERT INTO players (name) VALUES ('{0}');".format(name)
     db_query(query)
 
 
@@ -56,6 +56,10 @@ def player_standings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
+    standings = data_pull("select id, name, wins, matches from players, "
+                          "player_stats order "
+                          "by wins desc;")
+    return standings
 
 
 def report_match(winner, loser):
@@ -103,6 +107,6 @@ def data_pull(query):
     conn = connect()
     c = conn.cursor()
     c.execute(query)
-    data = c.fetchone()
+    data = c.fetchall()
     conn.close()
     return data
