@@ -136,7 +136,7 @@ if __name__ == '__main__':
     test_count()  # passed
     test_register()  # passed
     test_register_count_delete()  # passed
-    test_standings_before_matches()
+    test_standings_before_matches() # passed
     test_report_matches()
     test_pairings()
     print("Success!  All tests pass!")

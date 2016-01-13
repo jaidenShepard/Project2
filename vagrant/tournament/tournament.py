@@ -56,9 +56,8 @@ def player_standings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    standings = data_pull("select id, name, wins, matches from players, "
-                          "player_stats order "
-                          "by wins desc;")
+    standings = data_pull("SELECT id, name, wins, matches FROM players "
+                          "order by wins DESC ")
     return standings
 
 
