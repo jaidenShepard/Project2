@@ -87,7 +87,7 @@ def test_report_matches():
     delete_matches()
     delete_players()
     register_player("Bruno Walton")
-    register_player("Boots O'Neal")
+    register_player("Boots O\'Neal")
     register_player("Cathy Burton")
     register_player("Diane Grant")
     standings = player_standings()
@@ -140,5 +140,3 @@ if __name__ == '__main__':
     test_report_matches()
     test_pairings()
     print("Success!  All tests pass!")
-
-

@@ -13,18 +13,16 @@ def connect():
 
 def delete_matches():
     """Remove all the match records from the database."""
-    db_query("DELETE FROM matches;")
+    db_query("DELETE FROM match_ups;")
 
 
 def delete_players():
     """Remove all the player records from the database."""
-    # TODO figure out how to do this in sql. cascades apparently
     db_query("DELETE FROM players;")
     # db_query("DELETE FROM player_wins;")
 
 
 def count_players():
-    # TODO look into cleaning this up
     """:returns: the number of players currently registered."""
     count = data_pull("SELECT count(*) as num FROM players;")
     return count[0][0]
@@ -56,9 +54,10 @@ def player_standings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    standings = data_pull("select id, name, wins, matches from players, "
-                          "player_stats order "
-                          "by wins desc;")
+    standings = data_pull("SELECT players.id, players.name, "
+                          "player_stats.wins, player_stats.matches from "
+                          "players, player_stats order by player_stats.wins, "
+                          "player_stats.o_points, player_stats.draws")
     return standings
 
 

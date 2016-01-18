@@ -10,28 +10,29 @@ CREATE DATABASE tournament;
 
 \c tournament
 
-DROP TABLE IF EXISTS players, player_stats, matches, round_match_ups;
+DROP TABLE IF EXISTS players, player_stats, tournament, match_ups;
 
-CREATE TABLE players(
-  id SERIAL PRIMARY KEY,
-  name TEXT
-);
 
-CREATE TABLE matches(
+CREATE TABLE tournament(
   id SERIAL PRIMARY KEY
 );
 
-CREATE TABLE player_stats(
-  player SERIAL REFERENCES players(id),
-  match_id SERIAL REFERENCES matches(id),
-  wins INT DEFAULT 0,
-  losses INT DEFAULT 0,
-  matches INT DEFAULT 0
+CREATE TABLE players(
+  id SERIAL PRIMARY KEY,
+  name TEXT,
+  tour_id SERIAL REFERENCES tournament(id) ON DELETE CASCADE
 );
 
-CREATE TABLE round_match_ups(
-  match SERIAL REFERENCES matches(id),
+CREATE TABLE player_stats(
+  player SERIAL REFERENCES players(id) ON DELETE CASCADE ,
+  wins INT DEFAULT 0,
+  draws INT DEFAULT 0,
+  matches INT DEFAULT 0,
+  o_points INT DEFAULT 0
+);
+
+CREATE TABLE match_ups(
+  tour_id SERIAL REFERENCES tournament(id) ON DELETE CASCADE ,
   player1 SERIAL REFERENCES players(id),
   player2 SERIAL REFERENCES players(id)
 );
-
