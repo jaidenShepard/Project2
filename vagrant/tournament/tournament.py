@@ -11,6 +11,14 @@ def connect():
     return psycopg2.connect("dbname=tournament")
 
 
+def delete_tournaments():
+    db_query("DELETE FROM tournament;")
+
+
+def start_tournament():
+    db_query("Insert INTO tournament DEFAULT VALUES;")
+
+
 def delete_matches():
     """Remove all the match records from the database."""
     db_query("DELETE FROM match_ups;")
@@ -19,7 +27,6 @@ def delete_matches():
 def delete_players():
     """Remove all the player records from the database."""
     db_query("DELETE FROM players;")
-    # db_query("DELETE FROM player_wins;")
 
 
 def count_players():

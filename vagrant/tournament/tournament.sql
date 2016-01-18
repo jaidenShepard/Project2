@@ -29,6 +29,7 @@ CREATE TABLE player_stats(
   draws INT DEFAULT 0,
   matches INT DEFAULT 0,
   o_points INT DEFAULT 0
+
 );
 
 CREATE TABLE match_ups(
