@@ -53,17 +53,19 @@ def register_player(name, tour_id):
     :param name: the player's full name (need not be unique).
     :param tour_id: the tournament the player will be registered in.
     """
-    query = "INSERT INTO players (name, tour_id) VALUES ('{0}', " \
-            "'{1}');".format(name, tour_id)
-    db_query(query)
+    db_query("INSERT INTO players (name, tour_id) VALUES ('{0}', {1}); "
+             "INSERT into player_stats (player) SELECT id FROM players "
+             "WHERE name = '{0}'".format(name, tour_id))
 
 
-def player_standings():
+def player_standings(tour_id):
     """Returns a list of the players and their win records, sorted by wins.
 
     The first entry in the list should be the player in first place,
     or a player
     tied for first place if there is currently a tie.
+
+    :param tour_id: the tournament the player will be registered in.
 
     :returns:
       A list of tuples, each of which contains (id, name, wins, matches):
@@ -72,10 +74,11 @@ def player_standings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    standings = data_pull("SELECT players.id, players.name, "
-                          "player_stats.wins, player_stats.matches from "
-                          "players, player_stats order by player_stats.wins, "
-                          "player_stats.o_points, player_stats.draws")
+    standings = data_pull("SELECT id, name, wins, matches from "
+                          "players, player_stats where tour_id = {0}"
+                          " and id = player"
+                          " order by player_stats.wins, player_stats.o_points, "
+                          "player_stats.draws".format(tour_id))
     return standings
 
 
@@ -120,6 +123,13 @@ def db_query(query):
 
 
 def data_pull(query):
+    """Function for queries that return data
+
+    Connects to db, selects cursor, passes query to db, saves information, and
+    closes the connection.
+
+    :param query: A string to be passed as a query to the database
+    """
     conn = connect()
     c = conn.cursor()
     c.execute(query)

@@ -42,7 +42,7 @@ def test_count():
 def test_register():
     delete_matches(1)
     delete_players(1)
-    register_player("Chandra Nalaar", 1)
+    register_player('Chandra Nalaar', 1)
     c = count_players(1)
     if c != 1:
         raise ValueError(
@@ -69,11 +69,11 @@ def test_register_count_delete():
 
 
 def test_standings_before_matches():
-    delete_matches()
-    delete_players()
-    register_player("Melpomene Murray")
-    register_player("Randy Schwartz")
-    standings = player_standings()
+    delete_matches(1)
+    delete_players(1)
+    register_player("Melpomene Murray", 1)
+    register_player("Randy Schwartz", 1)
+    standings = player_standings(1)
     if len(standings) < 2:
         raise ValueError("Players should appear in playerStandings even "
                          "before "
@@ -98,7 +98,7 @@ def test_report_matches():
     delete_matches()
     delete_players()
     register_player("Bruno Walton")
-    register_player("Boots O\'Neal")
+    register_player("Boots O'Neal")
     register_player("Cathy Burton")
     register_player("Diane Grant")
     standings = player_standings()
@@ -149,7 +149,7 @@ if __name__ == '__main__':
     test_count()
     test_register()
     test_register_count_delete()
-    #test_standings_before_matches()
+    test_standings_before_matches()
     #test_report_matches()
     #test_pairings()
     print("Success!  All tests pass!")
