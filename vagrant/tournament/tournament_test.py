@@ -51,18 +51,18 @@ def test_register():
 
 
 def test_register_count_delete():
-    delete_matches()
-    delete_players()
-    register_player("Markov Chaney")
-    register_player("Joe Malik")
-    register_player("Mao Tsu-hsi")
-    register_player("Atlanta Hope")
-    c = count_players()
+    delete_matches(1)
+    delete_players(1)
+    register_player("Markov Chaney", 1)
+    register_player("Joe Malik", 1)
+    register_player("Mao Tsu-hsi", 1)
+    register_player("Atlanta Hope", 1)
+    c = count_players(1)
     if c != 4:
         raise ValueError(
             "After registering four players, countPlayers should be 4.")
-    delete_players()
-    c = count_players()
+    delete_players(1)
+    c = count_players(1)
     if c != 0:
         raise ValueError("After deleting, countPlayers should return zero.")
     print("7. Players can be registered and deleted.")
@@ -148,7 +148,7 @@ if __name__ == '__main__':
     test_delete()
     test_count()
     test_register()
-    #test_register_count_delete()
+    test_register_count_delete()
     #test_standings_before_matches()
     #test_report_matches()
     #test_pairings()
