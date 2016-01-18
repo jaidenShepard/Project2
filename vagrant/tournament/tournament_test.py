@@ -40,10 +40,10 @@ def test_count():
 
 
 def test_register():
-    delete_matches()
-    delete_players()
-    register_player("Chandra Nalaar")
-    c = count_players()
+    delete_matches(1)
+    delete_players(1)
+    register_player("Chandra Nalaar", 1)
+    c = count_players(1)
     if c != 1:
         raise ValueError(
             "After one player registers, countPlayers() should be 1.")
@@ -147,7 +147,7 @@ if __name__ == '__main__':
     test_delete_matches()
     test_delete()
     test_count()
-    #test_register()
+    test_register()
     #test_register_count_delete()
     #test_standings_before_matches()
     #test_report_matches()

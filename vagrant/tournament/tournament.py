@@ -44,15 +44,17 @@ def count_players(tour_id):
     return count[0][0]
 
 
-def register_player(name):
+def register_player(name, tour_id):
     """Adds a player to the tournament database.
 
     The database assigns a unique serial id number for the player.  (This
     should be handled by your SQL database schema, not in your Python code.)
 
     :param name: the player's full name (need not be unique).
+    :param tour_id: the tournament the player will be registered in.
     """
-    query = "INSERT INTO players (name) VALUES ('{0}');".format(name)
+    query = "INSERT INTO players (name, tour_id) VALUES ('{0}', " \
+            "'{1}');".format(name, tour_id)
     db_query(query)
 
 
