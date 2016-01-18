@@ -2,7 +2,6 @@
 #
 # tournament.py -- implementation of a Swiss-system tournament
 #
-# TODO error checks for all database functions
 import psycopg2
 
 
@@ -19,14 +18,20 @@ def start_tournament():
     db_query("Insert INTO tournament DEFAULT VALUES;")
 
 
-def delete_matches():
-    """Remove all the match records from the database."""
-    db_query("DELETE FROM match_ups;")
+def delete_matches(tour_id):
+    """Remove all the match records from the database.
+
+    :param tour_id: the tournament the matches should be deleted from
+    """
+    db_query("DELETE FROM match_ups where tour_id = {0};".format(tour_id))
 
 
-def delete_players():
-    """Remove all the player records from the database."""
-    db_query("DELETE FROM players;")
+def delete_players(tour_id):
+    """Remove all the player records from the database.
+
+    :param tour_id: the tournament the players should be deleted from
+    """
+    db_query("DELETE FROM players where tour_id = {0};".format(tour_id))
 
 
 def count_players():
@@ -109,7 +114,6 @@ def db_query(query):
 
 
 def data_pull(query):
-    # TODO see if this can be improved
     conn = connect()
     c = conn.cursor()
     c.execute(query)

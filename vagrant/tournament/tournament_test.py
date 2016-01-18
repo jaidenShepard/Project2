@@ -17,13 +17,13 @@ def test_start_tournament():
 
 
 def test_delete_matches():
-    delete_matches()
+    delete_matches(1)
     print("3. Old matches can be deleted.")
 
 
 def test_delete():
-    delete_matches()
-    delete_players()
+    delete_matches(1)
+    delete_players(1)
     print("4. Player records can be deleted.")
 
 
@@ -144,8 +144,8 @@ def test_pairings():
 if __name__ == '__main__':
     test_delete_tournament()
     test_start_tournament()
-    #test_delete_matches()
-    #test_delete()
+    test_delete_matches()
+    test_delete()
     #test_count()
     #test_register()
     #test_register_count_delete()
