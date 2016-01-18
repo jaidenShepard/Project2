@@ -77,17 +77,25 @@ def player_standings(tour_id):
     standings = data_pull("SELECT id, name, wins, matches from "
                           "players, player_stats where tour_id = {0}"
                           " and id = player"
-                          " order by player_stats.wins, player_stats.o_points, "
-                          "player_stats.draws".format(tour_id))
+                          " order by wins desc, o_points desc;".format(tour_id))
     return standings
 
 
-def report_match(winner, loser):
+def report_match(winner, loser, draw, tour_id):
     """Records the outcome of a single match between two players.
+
+    when draw =  FALSE, both players have the match number incremented, the
+    winner increments wins by 1, and the losers's number of wins is added to the
+     o_points.
+    when draw = TRUE, increments draw and matches in both players, each other's
+     wins are added to the other's o_points
 
     :param winner:  the id number of the player who won
     :param loser:  the id number of the player who lost
+    :param draw: boolean determining if the match was a draw.
     """
+    if not draw:
+        db_query("SELECT")
 
 
 def swiss_pairings():

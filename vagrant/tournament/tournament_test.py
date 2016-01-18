@@ -95,17 +95,17 @@ def test_standings_before_matches():
 
 
 def test_report_matches():
-    delete_matches()
-    delete_players()
-    register_player("Bruno Walton")
-    register_player("Boots O'Neal")
-    register_player("Cathy Burton")
-    register_player("Diane Grant")
-    standings = player_standings()
+    delete_matches(1)
+    delete_players(1)
+    register_player("Bruno Walton", 1)
+    register_player("Boots O'Neal", 1)
+    register_player("Cathy Burton", 1)
+    register_player("Diane Grant", 1)
+    standings = player_standings(1)
     [id1, id2, id3, id4] = [row[0] for row in standings]
     report_match(id1, id2)
     report_match(id3, id4)
-    standings = player_standings()
+    standings = player_standings(1)
     for (i, n, w, m) in standings:
         if m != 1:
             raise ValueError("Each player should have one match recorded.")
@@ -150,6 +150,6 @@ if __name__ == '__main__':
     test_register()
     test_register_count_delete()
     test_standings_before_matches()
-    #test_report_matches()
+    test_report_matches()
     #test_pairings()
     print("Success!  All tests pass!")
