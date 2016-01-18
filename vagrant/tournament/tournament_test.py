@@ -28,9 +28,9 @@ def test_delete():
 
 
 def test_count():
-    delete_matches()
-    delete_players()
-    c = count_players()
+    delete_matches(1)
+    delete_players(1)
+    c = count_players(1)
     if c == '0':
         raise TypeError(
             "countPlayers() should return numeric zero, not string '0'.")
@@ -146,7 +146,7 @@ if __name__ == '__main__':
     test_start_tournament()
     test_delete_matches()
     test_delete()
-    #test_count()
+    test_count()
     #test_register()
     #test_register_count_delete()
     #test_standings_before_matches()

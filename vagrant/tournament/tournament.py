@@ -34,9 +34,13 @@ def delete_players(tour_id):
     db_query("DELETE FROM players where tour_id = {0};".format(tour_id))
 
 
-def count_players():
-    """:returns: the number of players currently registered."""
-    count = data_pull("SELECT count(*) as num FROM players;")
+def count_players(tour_id):
+    """:returns: the number of players currently registered.
+
+    :param tour_id: the tournament the players should be counted from
+    """
+    count = data_pull("SELECT count(*) as num FROM players where tour_id = "
+                      "{0};".format(tour_id))
     return count[0][0]
 
 
