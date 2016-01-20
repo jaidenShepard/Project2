@@ -98,13 +98,13 @@ def test_report_matches():
     delete_matches(1)
     delete_players(1)
     register_player("Bruno Walton", 1)
-    register_player("Boots O'Neal", 1)
+    register_player("Boots ONeal", 1)
     register_player("Cathy Burton", 1)
     register_player("Diane Grant", 1)
     standings = player_standings(1)
     [id1, id2, id3, id4] = [row[0] for row in standings]
-    report_match(id1, id2)
-    report_match(id3, id4)
+    report_match(id1, id2, False)
+    report_match(id3, id4, False)
     standings = player_standings(1)
     for (i, n, w, m) in standings:
         if m != 1:

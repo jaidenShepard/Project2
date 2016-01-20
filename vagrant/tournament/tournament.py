@@ -81,7 +81,8 @@ def player_standings(tour_id):
     return standings
 
 
-def report_match(winner, loser, draw, tour_id):
+def report_match(winner, loser, draw):
+    # TODO add tournament tracking
     """Records the outcome of a single match between two players.
 
     when draw =  FALSE, both players have the match number incremented, the
@@ -94,8 +95,31 @@ def report_match(winner, loser, draw, tour_id):
     :param loser:  the id number of the player who lost
     :param draw: boolean determining if the match was a draw.
     """
-    if not draw:
-        db_query("SELECT")
+    if draw:
+        db_query("UPDATE player_stats set draws = draws + 1 "
+                 "where player = {0} OR name = {1}; "
+                 "UPDATE player_stats set o_points = o_points + "
+                 "(SELECT o_points from stats "
+                 "where player = {1}) "
+                 "where player = {0};"
+                 "UPDATE player_stats set o_points = o_points + "
+                 "(SELECT o_points from player_stats "
+                 "WHERE player = {0}) "
+                 "WHERE player = {1};"
+                 "".format(winner, loser))
+
+    else:
+        db_query("UPDATE player_stats SET wins = wins + 1 "
+                 "WHERE player = {0};"
+                 "UPDATE player_stats set o_points = o_points + "
+                 "(SELECT o_points from player_stats "
+                 "WHERE player = {1}) "
+                 "WHERE player = {0};"
+                 "".format(winner, loser))
+
+    db_query("UPDATE player_stats SET matches = matches + 1 "
+             "WHERE player = {0} OR player = {1}"
+             "".format(winner, loser))
 
 
 def swiss_pairings():
