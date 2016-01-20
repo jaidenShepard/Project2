@@ -10,62 +10,45 @@ def connect():
     return psycopg2.connect("dbname=tournament")
 
 
-def delete_tournaments():
-    db_query("DELETE FROM tournament;")
-
-
-def start_tournament():
-    db_query("Insert INTO tournament DEFAULT VALUES;")
-
-
-def delete_matches(tour_id):
+def delete_matches():
     """Remove all the match records from the database.
-
-    :param tour_id: the tournament the matches should be deleted from
     """
-    db_query("DELETE FROM match_ups where tour_id = {0};".format(tour_id))
+    db_query("DELETE FROM match_ups;")
 
 
-def delete_players(tour_id):
+def delete_players():
     """Remove all the player records from the database.
-
-    :param tour_id: the tournament the players should be deleted from
     """
-    db_query("DELETE FROM players where tour_id = {0};".format(tour_id))
+    db_query("DELETE FROM players;")
 
 
-def count_players(tour_id):
+def count_players():
     """:returns: the number of players currently registered.
-
-    :param tour_id: the tournament the players should be counted from
     """
-    count = data_pull("SELECT count(*) as num FROM players where tour_id = "
-                      "{0};".format(tour_id))
+    count = data_pull("SELECT count(*) as num FROM players;")
     return count[0][0]
 
 
-def register_player(name, tour_id):
+def register_player(name):
     """Adds a player to the tournament database.
 
     The database assigns a unique serial id number for the player.  (This
     should be handled by your SQL database schema, not in your Python code.)
 
     :param name: the player's full name (need not be unique).
-    :param tour_id: the tournament the player will be registered in.
     """
-    db_query("INSERT INTO players (name, tour_id) VALUES ('{0}', {1}); "
+    db_query("INSERT INTO players (name) VALUES ('{0}'); "
              "INSERT into player_stats (player) SELECT id FROM players "
-             "WHERE name = '{0}'".format(name, tour_id))
+             "WHERE name = '{0}'".format(name))
 
 
-def player_standings(tour_id):
+def player_standings():
     """Returns a list of the players and their win records, sorted by wins.
 
     The first entry in the list should be the player in first place,
     or a player
     tied for first place if there is currently a tie.
 
-    :param tour_id: the tournament the player will be registered in.
 
     :returns:
       A list of tuples, each of which contains (id, name, wins, matches):
@@ -75,9 +58,8 @@ def player_standings(tour_id):
         matches: the number of matches the player has played
     """
     standings = data_pull("SELECT id, name, wins, matches from "
-                          "players, player_stats where tour_id = {0}"
-                          " and id = player"
-                          " order by wins desc, o_points desc;".format(tour_id))
+                          "players, player_stats where id = player"
+                          " order by wins desc, o_points desc;")
     return standings
 
 
@@ -105,8 +87,7 @@ def report_match(winner, loser, draw):
                  "UPDATE player_stats set o_points = o_points + "
                  "(SELECT o_points from player_stats "
                  "WHERE player = {0}) "
-                 "WHERE player = {1};"
-                 "".format(winner, loser))
+                 "WHERE player = {1};".format(winner, loser))
 
     else:
         db_query("UPDATE player_stats SET wins = wins + 1 "
@@ -114,12 +95,12 @@ def report_match(winner, loser, draw):
                  "UPDATE player_stats set o_points = o_points + "
                  "(SELECT o_points from player_stats "
                  "WHERE player = {1}) "
-                 "WHERE player = {0};"
-                 "".format(winner, loser))
+                 "WHERE player = {0};".format(winner, loser))
 
     db_query("UPDATE player_stats SET matches = matches + 1 "
-             "WHERE player = {0} OR player = {1}"
-             "".format(winner, loser))
+             "WHERE player = {0} OR player = {1};"
+             "INSERT INTO match_ups (player1, player2) "
+             "VALUES ({0},{1});".format(winner, loser))
 
 
 def swiss_pairings():

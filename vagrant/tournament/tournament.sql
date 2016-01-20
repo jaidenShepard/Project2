@@ -12,15 +12,9 @@ CREATE DATABASE tournament;
 
 DROP TABLE IF EXISTS players, player_stats, tournament, match_ups;
 
-
-CREATE TABLE tournament(
-  id SERIAL PRIMARY KEY
-);
-
 CREATE TABLE players(
   id SERIAL PRIMARY KEY,
-  name TEXT,
-  tour_id SERIAL REFERENCES tournament(id) ON DELETE CASCADE
+  name TEXT
 );
 
 CREATE TABLE player_stats(
@@ -33,7 +27,6 @@ CREATE TABLE player_stats(
 );
 
 CREATE TABLE match_ups(
-  tour_id SERIAL REFERENCES tournament(id) ON DELETE CASCADE ,
   player1 SERIAL REFERENCES players(id),
   player2 SERIAL REFERENCES players(id)
 );
