@@ -64,7 +64,6 @@ def player_standings():
 
 
 def report_match(winner, loser, draw):
-    # TODO add tournament tracking
     """Records the outcome of a single match between two players.
 
     when draw =  FALSE, both players have the match number incremented, the
