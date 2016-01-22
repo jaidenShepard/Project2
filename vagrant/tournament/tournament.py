@@ -119,14 +119,16 @@ def swiss_pairings():
         name2: the second player's name
     """
 
-    a = data_pull("WITH pairs as "
-                  "(SELECT * from players, player_stats where id = player)"
-                  "SELECT a.id, a.name, b.id, b.name "
-                  "from pairs as a, pairs as b, match_ups "
-                  "where a.id != b.id"
-                  " and (a.wins >= b.wins or a.o_points >= b.o_points)"
-                  " and (a.id != player1 and b.id != player2);")
-    return a
+    standings = player_standings()
+    pair = []
+
+    while len(standings) > 1:
+        player1 = standings.pop()
+        player2 = standings.pop()
+        pair.append([player1[0], player1[1], player2[0], player2[1]])
+
+    return pair
+
 
 def db_query(query):
     """Function for querying the database
