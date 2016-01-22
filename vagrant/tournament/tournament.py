@@ -13,7 +13,7 @@ def connect():
 def delete_matches():
     """Remove all the match records from the database.
     """
-    db_query("DELETE FROM match_ups;")
+    db_query("DELETE FROM matches;")
 
 
 def delete_players():
@@ -25,7 +25,7 @@ def delete_players():
 def count_players():
     """:returns: the number of players currently registered.
     """
-    count = data_pull("SELECT count(*) as num FROM players;")
+    count = data_pull("SELECT count(*) FROM players;")
     return count[0][0]
 
 
@@ -37,9 +37,9 @@ def register_player(name):
 
     :param name: the player's full name (need not be unique).
     """
-    db_query("INSERT INTO players (name) VALUES ('{0}'); "
-             "INSERT into player_stats (player) SELECT id FROM players "
-             "WHERE name = '{0}'".format(name))
+    sql = "INSERT INTO players (name) VALUES (%s)"
+    data = (name, )
+    db_query(sql, data)
 
 
 def player_standings():
@@ -57,13 +57,11 @@ def player_standings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    standings = data_pull("SELECT id, name, wins, matches from "
-                          "players, player_stats where id = player"
-                          " order by wins desc, o_points desc;")
+    standings = data_pull("SELECT * FROM standings_view")
     return standings
 
 
-def report_match(winner, loser, draw):
+def report_match(winner, loser, draw=False):
     """Records the outcome of a single match between two players.
 
     when draw =  FALSE, both players have the match number incremented, the
@@ -76,30 +74,9 @@ def report_match(winner, loser, draw):
     :param loser:  the id number of the player who lost
     :param draw: boolean determining if the match was a draw.
     """
-    if draw:
-        db_query("UPDATE player_stats set draws = draws + 1 "
-                 "where player = {0} OR name = {1}; "
-                 "UPDATE player_stats set o_points = o_points + "
-                 "(SELECT o_points from stats "
-                 "where player = {1}) "
-                 "where player = {0};"
-                 "UPDATE player_stats set o_points = o_points + "
-                 "(SELECT o_points from player_stats "
-                 "WHERE player = {0}) "
-                 "WHERE player = {1};".format(winner, loser))
-
-    else:
-        db_query("UPDATE player_stats SET wins = wins + 1 "
-                 "WHERE player = {0};"
-                 "UPDATE player_stats set o_points = o_points + "
-                 "(SELECT o_points from player_stats "
-                 "WHERE player = {1}) "
-                 "WHERE player = {0};".format(winner, loser))
-
-    db_query("UPDATE player_stats SET matches = matches + 1 "
-             "WHERE player = {0} OR player = {1};"
-             "INSERT INTO match_ups (player1, player2) "
-             "VALUES ({0},{1});".format(winner, loser))
+    sql = "INSERT INTO matches (winner, loser, draw) VALUES (%s, %s, %s)"
+    data = (winner, loser, draw,)
+    db_query(sql, data)
 
 
 def swiss_pairings():
@@ -117,44 +94,58 @@ def swiss_pairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    pairs = []
+    standing = data_pull(
+        """SELECT a.id, a.name, b.id, b.name
+           from standings_view as a, standings_view as b
+           WHERE NOT EXISTS
+             (SELECT winner, loser FROM matches where
+             (a.id, b.id) = (winner, loser) or (b.id, a.id) = (winner, loser))
+              AND a.id != b.id
+              AND a.id < b.id
+""")
 
-    standings = player_standings()
-    pair = []
+    for players in standing[0::3]:
+        pairs.append(players)
 
-    while len(standings) > 1:
-        player1 = standings.pop()
-        player2 = standings.pop()
-        pair.append([player1[0], player1[1], player2[0], player2[1]])
-
-    return pair
+    return pairs
 
 
-def db_query(query):
+def db_query(query, data=None):
     """Function for querying the database
 
     Connects to db, selects cursor, passes query to db, commits, and closes
     the connection.
 
-    :param query: A string to be passed as a query to the database
+     Args:
+        query: String to query the database
+        data: The information to be injected to the query. Can be left blank
+
     """
     conn = connect()
     c = conn.cursor()
-    c.execute(query)
+    c.execute(query, data)
     conn.commit()
     conn.close()
 
 
-def data_pull(query):
-    """Function for queries that return data
+def data_pull(query, data=None):
+    """ Function for querying the database to retrieve data
 
-    Connects to db, selects cursor, passes query to db, saves information, and
-    closes the connection.
+    Connects to db, selects cursor, passes query to db, saves data, closes
+    the connection, then returns the data
 
-    :param query: A string to be passed as a query to the database
+    Args:
+        query: String to query the database
+        data: The information to be injected to the query. Can be left blank
+
+    Returns:
+        Data from pulled from the database
     """
     conn = connect()
     c = conn.cursor()
-    c.execute(query)
+    c.execute(query, data)
     data = c.fetchall()
     conn.close()
     return data
+
