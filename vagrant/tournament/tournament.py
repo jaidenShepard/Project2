@@ -99,19 +99,20 @@ def swiss_pairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    standing = player_standings()
+    previous_matches = data_pull("SELECT winner, loser FROM matches")
     pairs = []
-    standing = data_pull(
-        """SELECT a.id, a.name, b.id, b.name
-           from standings_view as a, standings_view as b
-           WHERE NOT EXISTS
-             (SELECT winner, loser FROM matches where
-             (a.id, b.id) = (winner, loser) or (b.id, a.id) = (winner, loser))
-              AND a.id != b.id
-              AND a.id < b.id
-""")
 
-    for players in standing[0::3]:
-        pairs.append(players)
+    while len(standing) > 1:
+        player1 = standing.pop()
+        player2 = standing.pop()
+
+        if set((player1[0], player2[0])) in previous_matches:
+            replace = standing.pop()
+            standing.append(player2)
+            pairs.append((player1[0], player1[1], replace[0], replace[1]))
+        else:
+            pairs.append((player1[0], player1[1], player2[0], player2[1]))
 
     return pairs
 

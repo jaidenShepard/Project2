@@ -1,4 +1,4 @@
-Swiss Style Tournament Project Version 1.1 2016/01/21
+Swiss Style Tournament Project Version 1.2 2016/01/21
 
 #What you'll need
 - Vagrant

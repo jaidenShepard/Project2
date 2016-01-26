@@ -28,3 +28,11 @@ CREATE VIEW standings_view AS
     (SELECT count(*) from matches where id = winner or id = loser) as matches
   FROM players ORDER BY wins DESC
 ;
+
+--SELECT a.id, a.name, b.id, b.name
+  --         from standings_view as a, standings_view as b
+    --       WHERE NOT EXISTS
+      --       (SELECT winner, loser FROM matches where
+        --     (a.id, b.id) = (winner, loser) or (b.id, a.id) = (winner, loser))
+          --    AND a.id != b.id
+            --  AND a.id < b.id

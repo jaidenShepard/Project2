@@ -110,14 +110,21 @@ def test_pairings():
     delete_matches()
     delete_players()
     register_player("Twilight Sparkle")
+    register_player("Twilight Sparkle2")
+    register_player("Twilight Sparkle3")
+    register_player("Twilight Sparkle4")
+    register_player("Twilight Sparkle5")
     register_player("Fluttershy")
     register_player("Applejack")
     register_player("Pinkie Pie")
     standings = player_standings()
-    [id1, id2, id3, id4] = [row[0] for row in standings]
+    [id1, id2, id3, id4, id5, id6, id7, id8] = [row[0] for row in standings]
     report_match(id1, id2, False)
     report_match(id3, id4, False)
+    report_match(id5, id6, False)
+    report_match(id7, id8, False)
     pairings = swiss_pairings()
+
     if len(pairings) != 2:
         raise ValueError(
             "For four players, swissPairings should return two pairs.")
