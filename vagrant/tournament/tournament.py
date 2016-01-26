@@ -5,10 +5,15 @@
 import psycopg2
 
 
-def connect():
-    """Connect to the PostgreSQL database.  :returns: a database connection."""
-    return psycopg2.connect("dbname=tournament")
-
+def connect(database_name="tournament"):
+    """Connect to the PostgreSQL database.  :returns: a database connection.
+    :param database_name: Gives a name to the database. Default: 'tournament'"""
+    try:
+        db = psycopg2.connect("dbname={}".format(database_name))
+        cursor = db.cursor()
+        return db, cursor
+    except Exception:
+        print("Failed to connect to database")
 
 def delete_matches():
     """Remove all the match records from the database.
@@ -122,8 +127,7 @@ def db_query(query, data=None):
         data: The information to be injected to the query. Can be left blank
 
     """
-    conn = connect()
-    c = conn.cursor()
+    conn, c = connect()
     c.execute(query, data)
     conn.commit()
     conn.close()
@@ -142,8 +146,7 @@ def data_pull(query, data=None):
     Returns:
         Data from pulled from the database
     """
-    conn = connect()
-    c = conn.cursor()
+    conn, c = connect()
     c.execute(query, data)
     data = c.fetchall()
     conn.close()
